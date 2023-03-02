@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lesson01/models/location.dart';
+import 'package:lesson01/styles.dart';
 
 class LocationDetail extends StatelessWidget {
   final Location location;
@@ -10,7 +11,10 @@ class LocationDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(location.name!),
+        title: Text(
+          location.name!,
+          style: Styles.navBarTitle,
+        ),
       ),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -21,14 +25,25 @@ class LocationDetail extends StatelessWidget {
 
   List<Widget> _renderBody(BuildContext context, Location location) {
     var result = <Widget>[];
-    result.add(_bannerImage(location.url!, 170.0));
+    result.add(_bannerImage(location.url!, 180.0));
     result.addAll(_renderFacts(context, location));
 
     return result;
   }
 
-  Widget _bannerImage(String url, double width) {
+  List<Widget> _renderFacts(BuildContext context, Location location) {
+    var result = <Widget>[];
+    for (int i = 0; i < location.facts!.length; i++) {
+      result.add(_sectionTitle(location.facts![i].title));
+      result.add(_sectionText(location.facts![i].text));
+    }
+
+    return result;
+  }
+
+  Widget _bannerImage(String url, double height) {
     return Container(
+      constraints: BoxConstraints.tightFor(height: height),
       child: Image.network(
         url,
         fit: BoxFit.fitWidth,
@@ -44,20 +59,21 @@ class LocationDetail extends StatelessWidget {
   }
 
   Widget _sectionTitle(String text) {
-    return Text(text);
+    return Container(
+      padding: EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 5.0),
+      child: Text(
+        text,
+        style: Styles.headerLarge,
+      ),
+    );
   }
 
   Widget _sectionText(String text) {
-    return Text(text);
-  }
-
-  List<Widget> _renderFacts(BuildContext context, Location location) {
-    var result = <Widget>[];
-    for (int i = 0; i < location.facts!.length; i++) {
-      result.add(_sectionTitle(location.facts![i].title));
-      result.add(_sectionText(location.facts![i].text));
-    }
-
-    return result;
+    return Container(
+        padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 15.0),
+        child: Text(
+          text,
+          style: Styles.textDefault,
+        ));
   }
 }
